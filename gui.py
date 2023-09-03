@@ -8,7 +8,7 @@ import sys
 class ModManager:
     def __init__(self, root):
         self.root = root
-        self.root.title("Gerenciador de Mods - FDGE v5 (Patch #2)")
+        self.root.title("Gerenciador de Mods - FDGE v6 (Patch #2)")
         
         icon_path = ModManager.resource_path("_fdge/bard_icon_class_bg3.ico")
         self.root.iconbitmap(icon_path)
@@ -66,16 +66,13 @@ class ModManager:
             # essa verificação pode ser removida ou alterada conforme sua necessidade.
             
             shutil.copytree(ModManager.resource_path("_fdge/_ROOT"), "./", dirs_exist_ok=True)
-
+            shutil.copytree(ModManager.resource_path("_fdge/_BKP"), "Bin", dirs_exist_ok=True)
+            
             local_path = os.environ['LocalAppData']
             mod_folder = os.path.join(local_path, r"Larian Studios\Baldur's Gate 3\Mods")
-            if os.path.exists(mod_folder):
-                shutil.rmtree(mod_folder)
             os.makedirs(mod_folder)
-
-            if os.path.exists(ModManager.resource_path("_fdge/_BKP")):
-                shutil.copytree(ModManager.resource_path("_fdge/_BKP"), "Bin", dirs_exist_ok=True)
-
+            
+            shutil.copytree(ModManager.resource_path("_fdge/_PAK"), mod_folder, dirs_exist_ok=True)
 
             messagebox.showinfo("Sucesso", "Mods ativados com sucesso!")
         except Exception as e:
