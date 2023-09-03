@@ -8,7 +8,10 @@ import sys
 class ModManager:
     def __init__(self, root):
         self.root = root
-        self.root.title("Gerenciador de Mods - FDGE v4")
+        self.root.title("Gerenciador de Mods - FDGE v5 (Patch #2)")
+        
+        icon_path = ModManager.resource_path("_fdge/bard_icon_class_bg3.ico")
+        self.root.iconbitmap(icon_path)
 
         self.lbl_status = tk.Label(root)
         self.lbl_status.pack(pady=20)
@@ -45,8 +48,19 @@ class ModManager:
 
         self.lbl_status.config(text=self.status_msg)
 
+    def check_required_folders(self):
+        required_folders = ['Bin', 'Data', 'Launcher']
+        for folder in required_folders:
+            if not os.path.exists(folder):
+                return False
+        return True
+
 
     def activate_mods(self):
+        if not self.check_required_folders():
+            messagebox.showerror("Erro", "A pasta atual não tem as pastas necessárias (Bin, Data, Launcher).")
+            return
+
         try:
             # Como não estamos mais verificando a pasta _fdge no sistema de arquivos, 
             # essa verificação pode ser removida ou alterada conforme sua necessidade.
@@ -107,9 +121,21 @@ class ModManager:
 
 if __name__ == "__main__":
     root = tk.Tk()
-
+    
     # Define a largura x altura inicial da janela. Por exemplo, 400x200.
     root.geometry("400x200")
+
+    # Função para centralizar a janela
+    def center_window(root, width=400, height=200):
+        # Calcula a posição central
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        x = (screen_width / 2) - (width / 2)
+        y = (screen_height / 2) - (height / 2)
+        root.geometry('%dx%d+%d+%d' % (width, height, x, y))
+
+    # Chamando a função para centralizar a janela
+    center_window(root)
 
     # Faz com que a janela não possa ser redimensionada.
     root.resizable(False, False)

@@ -1,1 +1,1 @@
-python -m PyInstaller --onefile --windowed --add-data="_fdge;_fdge" --distpath=out/dist --workpath=out/build gui.py  
+python -m PyInstaller --onefile --windowed --icon=_fdge/bard_icon_class_bg3.ico --add-data="_fdge;_fdge" --distpath=out/dist --workpath=out/build gui.py
