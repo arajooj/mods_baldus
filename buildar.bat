@@ -1,0 +1,1 @@
+python -m PyInstaller --onefile --windowed --add-data="_fdge;_fdge" --distpath=out/dist --workpath=out/build gui.py  
