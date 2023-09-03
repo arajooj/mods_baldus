@@ -1,0 +1,91 @@
+# Default config that is packaged with the mod
+
+# Foreword: Key names are in Larian style, e.g. key:w, shift+key:w or key:lshift.
+# For the names of all available keys, see the bottom of this config file.
+
+
+[ModHotkeys]
+# The ModHotkeys are region DEPENDANT!!! AZERTY keyboard users must adapt them!
+
+HoldWalkOrSprint = ""
+# When you are sprinting, holding this key will make you walk.
+# If you are walking, holding this key will make you sprint.
+
+ReloadConfig = "key:f11"
+# This will reload all config values.
+# If possible, it will also force the game to reload its inputconfig.
+
+ToggleAutorun = "shift+key:w"
+# Lets you move without holding Forward.
+# AZERTY users should set it to shift+key:z.
+
+ToggleCharacterOrCamera = "key:capslock"
+# Key that toggles between Character and Camera movement mode.
+
+ToggleWalkOrSprint = "key:insert"
+# Toggle between walking and sprinting movespeed.
+
+
+[Movement]
+
+WalkSpeed = 0.3
+# 1.0 would be sprinting speed. 0.5 would be 50% of that. [0.0, 1.0]
+
+WalkingIsDefault = false
+# Whether the character walks, when the game starts up. [true, false]
+
+
+[EnableFeatures]
+# Allows to enable or disable certain features of this mod.
+# These settings can NOT be hot reloaded, but require a game restart!
+
+AutoTogglingWasdMode = true
+# Automatically toggle WASD mode depending on the context. 
+# Toggle to Camera movement, when combat starts, and back to Character movement, when combat ends.
+# Doesn't work perfectly yet. Sometimes you have to toggle manually.
+# Requires CoreFeatures to be enabled!
+# [true, false]
+
+
+# List of all available keys:
+# (We try to match Larian's style, but for regional keys, they might not always match.)
+
+# Modifiers: ctrl, shift, alt. E.g. "ctrl+shift+key:w"
+
+# key:a                 key:b                   ...                     key:z
+# key:1                 key:2                   ...                     key:0
+# key:f1                key:f2                  ...                     key:f24
+
+# key:left              key:up                  key:right               key:down
+# key:backspace         key:tab                 key:return              key:capslock
+# key:insert            key:delete              key:space               key:end
+# key:home              key:print               key:scroll              key:escape
+# key:pause             key:numlock
+
+# key:lalt              key:ralt
+# key:lshift            key:rshift
+# key:lctrl             key:rctrl
+# key:lwin              key:rwin                
+
+# key:;                 key:=                   key:,                   key:'
+# key:-                 key:.                   key:/                   key:`
+# key:[                 key:]
+# key:\\ (Backslash is a very special character in the toml format. You must either
+# write xxx="key:\\" or xxx='key:\' for it to work.)
+
+# key:numpad0           key:numpad1             ...                     key:numpad9
+# key:multiply          key:add                 key:decimal             key:divide
+# key:separator         key:subtract            
+
+# key:convert           key:nonconvert          key:accept              key:modechange
+# key:prior             key:next                key:clear               key:select
+# key:execute           key:help                key:sleep               key:snapshot 
+# key:browser_back      key:browser_forward     key:browser_refresh     key:browser_stop
+# key:browser_search    key:browser_favorites   key:browser_home        key:volume_mute
+# key:volume_down       key:volume_up           key:media_next_track    key:media_prev_track
+# key:media_stop        key:media_play_pause    key:launch_mail         key:launch_app1
+# key:oem_8             key:oem_102             key:processkey          key:packet
+# key:attn              key:crsel               key:exsel               key:ereof
+# key:play              key:zoom                key:noname              key:pa1
+# key:oem_clear         key:launch_app2         key:kana                key:kanji
+# key:junja             key:final               key:apps
