@@ -42,7 +42,7 @@
                     <attribute id="Description" type="LSString" value=""/>
                     <attribute id="Folder" type="LSString" value="Gustav"/>
                     <attribute id="LobbyLevelName" type="FixedString" value="SYS_Menuscreen_Camp_A"/>
-                    <attribute id="MD5" type="LSString" value="8c8599a31659c46560135ccc2ffcf63a"/>
+                    <attribute id="MD5" type="LSString" value="d4213e79a56da95684efb9d01b5550c5"/>
                     <attribute id="MainMenuBackgroundVideo" type="FixedString" value=""/>
                     <attribute id="MenuLevelName" type="FixedString" value="SYS_Menuscreen_Act1_A"/>
                     <attribute id="Name" type="LSString" value="Gustav"/>

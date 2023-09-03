@@ -4,9 +4,11 @@
 ExplorationUnlockPitch = true
 ExplorationUnlockedPitchMax = 85.0
 ExplorationUnlockedPitchMin = -85.0
+ExplorationKeepTacticalPitchLocked = false
 
 ExplorationOverrideLockedPitch = false
-# The following settings only have an effect when ExplorationOverrideLockedPitch is set to true and ExplorationUnlockPitch is set to false
+# The following settings only have an effect when ExplorationOverrideLockedPitch is set to true and ExplorationUnlockPitch is set to false 
+# or (for tactical settings) ExplorationKeepTacticalPitchLocked is set to true
 # They are default game values
 ExplorationLockedPitchClose = 19.05
 ExplorationLockedPitchFar = 40.71
@@ -45,9 +47,11 @@ ExplorationVerticalOffsetMult = 0.8        # Vertical offset of the camera from 
 CombatUnlockPitch = true
 CombatUnlockedPitchMax = 85.0
 CombatUnlockedPitchMin = -85.0
+CombatKeepTacticalPitchLocked = false
 
 CombatOverrideLockedPitch = false
-# The following settings only have an effect when CombatOverrideLockedPitch is set to true and CombatUnlockPitch is set to false
+# The following settings only have an effect when CombatOverrideLockedPitch is set to true and CombatUnlockPitch is set to false 
+# or (for tactical settings) CombatKeepTacticalPitchLocked is set to true
 # They are default game values
 CombatLockedPitchClose = 32.73
 CombatLockedPitchFar = 52.42

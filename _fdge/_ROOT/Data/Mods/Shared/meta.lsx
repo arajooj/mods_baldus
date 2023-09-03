@@ -11,7 +11,7 @@
                     <attribute id="Description" type="LSString" value=""/>
                     <attribute id="Folder" type="LSString" value="Shared"/>
                     <attribute id="LobbyLevelName" type="FixedString" value=""/>
-                    <attribute id="MD5" type="LSString" value="9891fcbfdc326592d1edc64909a00e26"/>
+                    <attribute id="MD5" type="LSString" value="6f5efb3e4def7f7cc983edae1e86dc45"/>
                     <attribute id="MainMenuBackgroundVideo" type="FixedString" value=""/>
                     <attribute id="MenuLevelName" type="FixedString" value=""/>
                     <attribute id="Name" type="LSString" value="Shared"/>

@@ -8,7 +8,7 @@ import sys
 class ModManager:
     def __init__(self, root):
         self.root = root
-        self.root.title("Gerenciador de Mods - FDGE v3")
+        self.root.title("Gerenciador de Mods - FDGE v4")
 
         self.lbl_status = tk.Label(root)
         self.lbl_status.pack(pady=20)
