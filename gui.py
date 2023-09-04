@@ -5,7 +5,6 @@ import os
 import shutil
 import sys
 import requests
-import json
 from tkinter import ttk, messagebox
 from decouple import config
 
@@ -55,7 +54,7 @@ class ModManager:
 
     def __init__(self, root):
         self.root = root
-        self.root.title("Gerenciador de Mods - FDGE v6 (Patch #2)")
+        self.root.title("Gerenciador de Mods - FDGE v7 (Patch #2)")
 
         icon_path = self.resource_path("_fdge/bard_icon_class_bg3.ico")
         self.root.iconbitmap(icon_path)
@@ -190,7 +189,7 @@ class ModManager:
 
         self.check_mods_status()
 
-    def center_window(self, width=400, height=200):
+    def center_window(self, width=400, height=300):
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         x = (screen_width / 2) - (width / 2)
@@ -199,7 +198,7 @@ class ModManager:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("400x200")
+    root.geometry("400x300")
     root.resizable(False, False)
 
     app = ModManager(root)
@@ -208,5 +207,5 @@ if __name__ == "__main__":
     root.mainloop()
 
 # Build command (Windows): 
-# python -m PyInstaller --onefile --windowed --icon=_fdge/bard_icon_class_bg3.ico --add-data="_fdge;_fdge" --distpath=out/dist --workpath=out/build --name="bg3_fdge_modmanager_v7" --log-level=DEBUG --clean gui.py
+# python -m PyInstaller --onefile --windowed --icon=favicon.ico --add-data="_fdge;_fdge" --distpath=out/dist --workpath=out/build --name="bg3_fdge_modmanager_v7" --log-level=DEBUG --clean gui.py
 
