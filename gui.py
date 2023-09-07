@@ -8,8 +8,11 @@ import requests
 from decouple import config
 import logging
 import zipfile
-import py7zr
-import subprocess
+import os
+import hashlib
+import json
+import re
+
 
 # Configuração básica de logging
 logging.basicConfig(filename="modmanager.log", level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -39,6 +42,51 @@ class GitHubReleaseManager:
             return response.json()
         else:
             response.raise_for_status()
+            
+            
+class FileHashVerifier:
+    def __init__(self, directory_to_check, hash_file='hash.fdge'):
+        self.directory_to_check = directory_to_check
+        self.hash_file = hash_file
+
+    @staticmethod
+    def generate_file_hash(filepath):
+        """Generate a hash for a file."""
+        hasher = hashlib.md5()
+        with open(filepath, 'rb') as file:
+            buf = file.read()
+            hasher.update(buf)
+        return hasher.hexdigest()
+
+    def get_hashes_from_directory(self):
+        """Generate hashes for all files in the specified directory and its subdirectories."""
+        hashes = {}
+        for dirpath, dirnames, filenames in os.walk(self.directory_to_check):
+            for filename in filenames:
+                filepath = os.path.join(dirpath, filename)
+                file_hash = self.generate_file_hash(filepath)
+                hashes[filepath.replace(self.directory_to_check, '').lstrip(os.sep)] = file_hash
+        return hashes
+
+    def load_hashes_from_file(self):
+        """Load the hashes from a file."""
+        with open(self.hash_file, 'r') as file:
+            return json.load(file)
+
+    @staticmethod
+    def compare_hashes(stored_hashes, generated_hashes):
+        """Compare stored hashes with generated ones."""
+        mismatches = {}
+        for key, value in generated_hashes.items():
+            if key not in stored_hashes or stored_hashes[key] != value:
+                if key not in ["hash.fdge", "version.fdge"] and not re.match(r'^v[\d\.]+\.zip$', key):
+                    mismatches[key] = value
+        return mismatches
+
+    def verify(self):
+        stored_hashes = self.load_hashes_from_file()
+        generated_hashes = self.get_hashes_from_directory()
+        return self.compare_hashes(stored_hashes, generated_hashes)
 
 # ------------------- ModManager -------------------
 class ModManager:
@@ -89,14 +137,44 @@ class ModManager:
         self.FDGE_DIR.mkdir(parents=True, exist_ok=True)  # Garantir que _FDGE exista
         current_version = self.get_current_version()
         latest_version = self.get_latest_version()
+
         
-        if current_version != latest_version:
+        self.update_gui_loading("Verificando hash dos arquivos...")
+        hash_file = self.FDGE_DIR / "hash.fdge"
+        
+        differences = False
+        
+        if hash_file.exists():
+            verifier = FileHashVerifier('_FDGE', self.resource_path("_FDGE/hash.fdge"))
+            differences = verifier.verify()
+            print(differences)
+        else:
+            differences = True
+
+        if (current_version != latest_version) or differences:
+            
+            if differences:
+                messagebox.showerror("Erro", "Arquivos corrompidos ou ausentes. Baixe a versão mais recente dos mods novamente.")
+    
+            if current_version != latest_version:
+                messagebox.showinfo("Sucesso", "Nova versão disponível. Baixando a versão mais recente dos mods...")
+                
+                
+            # delete old fdge
+            if self.FDGE_DIR.exists():
+                shutil.rmtree(self.FDGE_DIR)
+
+            # delete old mods
+            if self.MOD_FOLDER_ABS_PATH.exists():
+                shutil.rmtree(self.MOD_FOLDER_ABS_PATH)
+                
             self.update_gui_loading("Baixando a versão mais recente dos mods...")
             # Use a função para baixar a nova versão e descompactar para a pasta FDGE
             self.download_and_extract_latest_mod()
-            with open(self.resource_path("_FDGE/version.txt"), 'w') as f:
+            with open(self.resource_path("_FDGE/version.fdge"), 'w') as f:
                 f.write(latest_version)
-
+                
+                
         self.show_buttons()
         
         
@@ -119,7 +197,7 @@ class ModManager:
         total_size = int(response.headers.get('content-length', 0))
         block_size = 1024  # 1 KB
 
-        self.progress_label = tk.Label(self.root, text="Baixando arquivo...")
+        self.progress_label = tk.Label(self.root, text="Baixando arquivo: 0%")
         self.progress_label.pack(pady=5)
 
         self.progress_bar = ttk.Progressbar(self.root, orient='horizontal', length=300, mode='determinate')
@@ -130,13 +208,15 @@ class ModManager:
             for data in response.iter_content(block_size):
                 downloaded_size += len(data)
                 file.write(data)
-                self.progress_bar['value'] = (downloaded_size / total_size) * 100
+                percentage = (downloaded_size / total_size) * 100
+                self.progress_label.config(text=f"Baixando arquivo: {percentage:.2f}%")
+                self.progress_bar['value'] = percentage
                 self.root.update()
 
         self.progress_label.destroy()
         self.progress_bar.destroy()
 
-            
+
     def check_mods_status(self):
         if self.MOD_FOLDER_ABS_PATH.exists() and self.NATIVE_MODS_PATH.exists():
             self.status_msg = "Mods estão ativados."
@@ -220,7 +300,7 @@ class ModManager:
                 old_path.rename(new_path)
                 
     def get_current_version(self):
-        version_file = self.FDGE_DIR / "version.txt"
+        version_file = self.FDGE_DIR / "version.fdge"
         if version_file.exists():
             with open(version_file, 'r') as f:
                 return f.read().strip()
@@ -241,6 +321,7 @@ class ModManager:
         
         
     def download_and_extract_latest_mod(self):
+        self.FDGE_DIR.mkdir(parents=True, exist_ok=True)  # Garantir que _FDGE exista
         try:
             token = self.GITHUB_TOKEN
             owner = "arajooj"
@@ -250,7 +331,7 @@ class ModManager:
             release_data = gh_manager.get_latest_release()
 
             tag_name = release_data['tag_name']
-            version_file_path = self.FDGE_DIR / "version.txt"
+            version_file_path = self.FDGE_DIR / "version.fdge"
 
             if version_file_path.exists() and version_file_path.read_text().strip() == tag_name:
                 logging.info(f"Versão {tag_name} já baixada. Pulando o download.")
@@ -279,7 +360,6 @@ class ModManager:
                     self.update_extraction_progress(extraction_progress)
 
                     zip_ref.extract(file_info, self.FDGE_DIR)
-
             os.remove(destination_path)
             
             if hasattr(self, 'progress_label'):
@@ -331,5 +411,5 @@ if __name__ == "__main__":
 
 
 # Build command (Windows): 
-# python -m PyInstaller --onefile --windowed --icon=favicon.ico --add-data="_fdge;_fdge" --distpath=out/dist --workpath=out/build --name="bg3_fdge_modmanager_v7" --log-level=DEBUG --clean gui.py
+# python -m PyInstaller --onefile --windowed --icon=favicon.ico --distpath=out/dist --workpath=out/build --name="bg3_fdge_modmanager_v7" --log-level=DEBUG --clean gui.py
 
